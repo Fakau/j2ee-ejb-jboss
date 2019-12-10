@@ -4,7 +4,7 @@
 	    <jta-data-source>java:/dsBanque</jta-data-source>
 		<class>com.engin.fakau.domaine.Account</class>
 		<properties>
-			<property name="javax.persistence.shema-generation.database.action" value="create"/>
+			<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
 		</properties>
 	</persistence-unit>
 	
