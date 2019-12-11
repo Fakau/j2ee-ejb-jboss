@@ -1,10 +1,12 @@
 package com.engin.fakau.ejbimplementation;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import com.engin.fakau.domaine.Account;
 import com.engin.fakau.local.IAccountLocal;
@@ -17,38 +19,56 @@ public class AccountImplement implements IAccountLocal, IAccountRemote {
 	private EntityManager entityManager;
 	@Override
 	public Account createAccount(Account account) {
-		// TODO Auto-generated method stub
-		return null;
+		entityManager.persist(account);
+		return account;
 	}
 
 	@Override
 	public Account UpdateAccount(Account account) {
-		// TODO Auto-generated method stub
-		return null;
+		entityManager.merge(account);
+		return account;
 	}
 
 	@Override
 	public Account getAccountBySecurityCode(Long securityCode) {
-		// TODO Auto-generated method stub
-		return null;
+		return entityManager.find(Account.class, securityCode);
 	}
 
 	@Override
 	public Account deposit(Long securityCode, BigDecimal amount) {
-		// TODO Auto-generated method stub
-		return null;
+		Account a = getAccountBySecurityCode(securityCode);
+		if(a==null) {
+			throw new RuntimeException("account does not exist");
+		}
+		a.setAmount(a.getAmount().add(amount));
+		return UpdateAccount(a);
 	}
 
 	@Override
 	public Account withdrawal(Long securityCode, BigDecimal amount) {
-		// TODO Auto-generated method stub
-		return null;
+		Account a = getAccountBySecurityCode(securityCode);
+		if(a==null) {
+			throw new RuntimeException("account does not exist");
+		}
+		a.setAmount(a.getAmount().subtract(amount));
+		/*
+		 * if() {
+		 * amount<0
+		 * }
+		 */
+		return UpdateAccount(a);
 	}
 
 	@Override
-	public Account transfer(Long fromSecurityCode, BigDecimal fromAmount, Long toSecurityCode, BigDecimal toAmount) {
-		// TODO Auto-generated method stub
-		return null;
+	public void transfer(Long fromSecurityCode, BigDecimal amount, Long toSecurityCode) {
+		withdrawal(fromSecurityCode, amount);
+		deposit(toSecurityCode, amount);
+	}
+
+	@Override
+	public List<Account> getAll() {
+		Query q=entityManager.createQuery("select c from Account c");
+		return q.getResultList();
 	}
 
 }

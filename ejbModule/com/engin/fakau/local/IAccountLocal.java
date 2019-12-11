@@ -1,6 +1,7 @@
 package com.engin.fakau.local;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.ejb.Local;
 
@@ -13,6 +14,6 @@ public interface IAccountLocal {
 	public Account getAccountBySecurityCode(Long securityCode);
 	public Account deposit(Long securityCode, BigDecimal amount);
 	public Account withdrawal(Long securityCode, BigDecimal amount);
-	public Account transfer(Long fromSecurityCode, BigDecimal fromAmount, Long toSecurityCode, BigDecimal toAmount);
-
+	public void transfer(Long fromSecurityCode, BigDecimal fromAmount, Long toSecurityCode);
+	public List<Account> getAll();
 }
